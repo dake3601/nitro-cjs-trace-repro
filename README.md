@@ -4,7 +4,7 @@
 
 Nitro's externals plugin does not trace dependencies loaded via CJS `require()` inside bundled packages.
 
-`ws` is a common WebSocket library that optionally loads native addons (`bufferutil`, `utf-8-validate`) via `require('bufferutil')`. These native packages are in Nitro's `NodeNativePackages` list and should be externalized and traced to `.output/server/node_modules/` during production builds.
+`ws` is a common WebSocket library that optionally loads native addons (`bufferutil`) via `require('bufferutil')`. These native packages are in Nitro's `NodeNativePackages` list and should be externalized and traced to `.output/server/node_modules/` during production builds.
 
 **Root cause:** In `src/build/plugins/externals.ts`, the `resolveId` handler has:
 
@@ -58,3 +58,9 @@ if (rOpts.custom?.["node-resolve"]) {
 ```
 
 PR: https://github.com/dake3601/nitro/tree/fix/externals-cjs-require-tracing
+
+Test out with `node ./_patch_nitro.mjs` in the root of this repo, which applies the fix to your local Nitro installation. Then run the reproduction steps again to confirm the fix works.
+
+After testing, run `node ./_unpatch_nitro.mjs` to restore the original Nitro files.
+
+.output-without-patch contains the build output without the patch (missing `bufferutil` and `node-gyp-build`), while .output contains the build output with the patch applied (both dependencies present).

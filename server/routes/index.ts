@@ -1,8 +1,9 @@
+import { defineHandler } from "nitro/h3";
 import { WebSocketServer } from "ws";
 
 let wss: WebSocketServer | undefined;
 
-export default defineEventHandler(() => {
+export default defineHandler(() => {
   // Create a WebSocketServer to trigger ws's internal require('bufferutil')
   if (!wss) {
     wss = new WebSocketServer({ noServer: true });

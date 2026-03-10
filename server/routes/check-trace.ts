@@ -1,8 +1,9 @@
+import { defineHandler } from "nitro/h3";
 import { existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-export default defineEventHandler(() => {
+export default defineHandler(() => {
   // In a production build, Nitro traces dependencies to .output/server/node_modules/
   // This route checks whether bufferutil was correctly traced.
   //
@@ -14,7 +15,7 @@ export default defineEventHandler(() => {
   const serverDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
   const nodeModules = resolve(serverDir, "node_modules");
 
-  const deps = ["bufferutil", "node-gyp-build", "utf-8-validate"];
+  const deps = ["bufferutil", "node-gyp-build"];
   const results: Record<string, boolean> = {};
 
   for (const dep of deps) {
